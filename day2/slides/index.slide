@@ -1,7 +1,8 @@
 Functions, error handling, panic and recovery
 Week 1, day 2
 
-Serhii Herasymov
+*Serhii*Herasymov*
+_(updated_by_Oleksandr_Reuta)_
 SoftServe
 sgeras@softserveinc.com
 
@@ -11,7 +12,7 @@ sgeras@softserveinc.com
 
 * Functions
 
-* Functions
+* Function definition
 
 A function is an independent section of code that maps zero or more input parameters to zero or more output parameters:
 
@@ -20,6 +21,8 @@ A function is an independent section of code that maps zero or more input parame
 Go functions schematics:
 
 .image ./function-scheme.png
+
+Function must be defined outside the other functions - at the top level!
 
 
 * Functions - multiple values
@@ -60,26 +63,90 @@ There is a special form available for the last parameter in a Go function:
 [...] indicates that function takes zero or more of those parameters.
 BTW, this is good way to work with "optional" parameters.
 
-* Closures
 
-It is possible to create functions inside of functions:
+
+* Functional programming
+
+* Code as a Data
+
+In Go (like Haskell, Python, JavaScript) a function is a first class object.
+That means it could be created, stored, passed around as a piece of data.
+We *can*not*define* a function _inside_ other function, but we *can*create* it as a value:
 
     func main() {
-        add := func(x, y int) int {
-            return x + y
-        }
-        fmt.Println(add(1,1))
+      func sum(a, b int) int { return a + b }   // Compilation ERROR
+      println( sum(2, 5) )
+    }
+	
+    func main() {
+      sum := func (a, b int) int { return a + b }   // OK
+      println( sum(2, 5) )                          // fmt.Printf("%T", sum) prints a type of "sum"
     }
 
-Also you can return function as a result of other functions (hello, functional programming):
 
-    func curriedAdd (a int) func (int) int {
+* Functions could be passed around
+
+You can return function as a result of other functions:
+
+    func curriedAdd (a int) func (int) int {     // use curriedAdd(2)(3) to call it
     	return func(b int) int {
     		return a + b
     	}
     }
+   
 
-    // use curriedAdd(2)(3) to call it
+or pass it as an argument to other functions:
+
+    func calculateAndPrint(a int, f func(int)int) {
+        fmt.Printf("Nicely printed result: %d\n", f(a))
+    }
+
+or combine these two cases:
+
+    calculateAndPrint(3, curriedAdd(2))
+
+
+* Functions could be stored as data (1/2)
+
+Traditional *switch*-desicion:
+
+    func doAction(operator rune, a, b int) (result int, ok bool) {
+        ok = true
+        switch(operator) {
+          case '+': result = a + b;
+          case '-': result = a - b;
+          case '*': result = a * b;
+          default: ok = false;
+        }
+        return
+    }
+
+NOTE:
+
+- `operator`, `a`, `b`, `result`, `ok` plays as pure local variables defined via `var`
+- Last return is required. It is an error not to place it here
+
+* Functions could be stored as data (2/2)
+
+Alternative *dictionary*-implementation
+
+    func add(a, b int) int { return a + b }
+    func sub(a, b int) int { return a - b }
+    func mul(a, b int) int { return a * b }
+
+    var action = map[rune]func(int,int)int {
+        '+': add,
+        '-': sub,
+        '*': mul,
+    }
+
+    func doAction(operator rune, a, b int) (result int, ok bool) {
+        if f, ok := action[operator]; ok {
+            return f(a, b), ok
+        }
+        return
+    }
+
 
 * Recursion
 
@@ -95,7 +162,40 @@ Function is able to call itself:
 .image ./recursion.gif
 
 
+* Decorator
 
+Decorator adds new functionality to an existing object without altering its structure.
+It builds a new function with additional features using an existing one.
+
+General pattern:
+
+    func basic(int) int {
+        ... //basic functionality
+    }
+
+    func decorator(f func(int)int) func(int)int {
+        return func(a int) int {
+            ... // before-code
+            f(a)
+            ... // after-code
+            return ...
+        }
+    }
+
+Usage:
+
+    newFunc := decorator(basic)
+    result := newFunc(a)                   or just           result := decorator(basic)(a)
+
+
+* Closure
+
+A closure is a function that retains the same _environment_ as the one it had when it was created.
+It looks like the function defined in the closure *remembers* the _environment_ in which it was created.
+
+.link https://tour.golang.org/moretypes/25 Example on "A Tour of Go"
+
+.link http://keshavabharadwaj.com/2016/03/31/closure_golang/ A More Detailed Examples
 
 
 * Defer, Panic & Recover
