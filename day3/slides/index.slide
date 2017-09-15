@@ -1,7 +1,8 @@
 Pointers, methods and interfaces
 Week 1, day 3
 
-Serhii Herasymov
+*Serhii*Herasymov*
+(updated by Oleksandr Reuta)
 SoftServe
 sgeras@softserveinc.com
 
@@ -57,12 +58,28 @@ Another way to get a pointer is to use the built-in _new()_ function:
 _new()_ takes a type as an argument, allocates enough memory to fit a value of that type and returns a pointer to it.
 
 
+* Object oriented programming
+
+
+* Objects
+
+*Objects* are language constructs that have _state_ and _behavior_ that operates on the state and selectively exposes it to other parts of the program. 
+
+A struct defines state.
+
+    type Creature struct {
+        Name string
+        Real bool
+    }
+
+A member function (method) defines some behavior
+
+    func (c Creature) String() {
+        fmt.Printf("Name: '%s', Real: %t\n", c.Name, c.Real)
+    }
+
 
 * Methods
-
-* Methods
-
-_Object_ is a value or variable that has method, and a _method_ is a function, associated with a particular type.
 
 Method schematics:
 
@@ -89,6 +106,79 @@ Same goes if for methods that need to update the receiver variable:
     rect.ScaleBy(3) // => 600
 
 
+* Embedding
+
+You can embed anonymous types inside each other. If you embed a nameless struct then the embedded struct provides its state (and methods) to the embedding struct directly. For example, the FlyingCreature has a nameless `Creature` struct embedded in it, which means a `FlyingCreature` *is*a* `Creature`.
+
+    type FlyingCreature struct {
+        Creature
+        WingSpan int
+    }
+
+Now, if you have an instance of a `FlyingCreature`, you can access its `Name` and `Real` attributes directly.
+
+    dragon := &FlyingCreature{ Creature{"Dragon", false}, 15 }
+    fmt.Println(dragon.Name)
+    fmt.Println(dragon.Real)
+    fmt.Println(dragon.WingSpan)
+
+* Encapsulation
+
+Go encapsulates things at the *package* level.
+
+Names that start with a lowercase letter are only visible within that package.
+
+You can hide anything in a private package and just expose specific types, interfaces, and factory functions.
+
+    type foo struct {}
+
+    func (f foo) Foo1() {
+        fmt.Println("Foo1() here")
+    }
+
+    func (f foo) Foo2() {
+        fmt.Println("Foo2() here")
+    }
+    
+    func NewFoo() Fooer {
+        return &Foo{}
+    }
+
+
+* Inheritance
+
+
+Modern languages and object-oriented thinking now favor composition over inheritance.
+
+For all intents and purposes, composition by embedding an anonymous type is equivalent to implementation inheritance.
+
+You can also embed an interface. (It can even lead to a runtime error that is not discovered at compile time if the embedding type doesn't implement all the interface methods.)
+
+
+* Polymorphism
+
+Polymorphism is an ability to treat objects of different types uniformly as long as they adhere to the same interface (behavior).
+
+Go interfaces provide this capability in a very direct and intuitive way. 
+
+    type Human interface {
+        Likes() string
+    }
+    type Man struct {}
+    func (m Man) Likes() string {
+        return "fishing"
+    }
+    type Woman struct {}
+    func (m Woman) Likes() string {
+        return "shopping"
+    }
+    func main() {
+        m, w := new(Man), new(Woman)
+        hArr := [...]Human{m, w} //an array of Humans - we don’t know whether Man or Woman
+        for n, _ := range (hArr) {
+            fmt.Println("I'm a human and I like ", hArr[n].Likes())   //behavior changes depending on actual instance
+        }
+    }
 
 
 * Interfaces
@@ -240,3 +330,9 @@ A non-constant value *x* can be converted to type *T* in any of these cases:
 - x's type and T are both complex types.
 - x is an integer or a slice of bytes or runes and T is a string type.
 - x is a string and T is a slice of bytes or runes.
+
+* Conclusion
+
+Go is a bona fide object-oriented programming language. It enables object-based modeling and promotes the best practice of using interfaces instead of concrete type hierarchies. Go made some unusual syntactic choices, but overall working with types, methods, and interfaces feels simple, lightweight, and natural. 
+
+Embedding is not very pure, but apparently pragmatism was at work, and embedding was provided instead of only composition by name.
