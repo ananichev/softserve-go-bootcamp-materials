@@ -1,7 +1,8 @@
 Packages, go tool, vendoring
 Week 1, day 4
 
-Serhii Herasymov
+*Serhii*Herasymov*
+(_updated_by_Oleksandr_Reuta_)
 SoftServe
 sgeras@softserveinc.com
 
@@ -32,6 +33,8 @@ The commands are:
     version     print Go version
     vet         run go tool vet on packages
 
+.link https://golang.org/cmd/go/ Command Go
+
 * go build
 
 Build compiles the packages named by the import paths, along with their dependencies, but it does not install the results.
@@ -49,6 +52,8 @@ Doc prints the documentation comments associated with the item identified by its
 Usage:
 
     go doc [-u] [-c] [package|[package.]symbol[.method]]
+
+юдштл https://blog.golang.org/godoc-documenting-go-code Godoc: documenting Go code
 
 * go env
 
@@ -83,6 +88,8 @@ Fmt runs the command `gofmt -l -w` on the packages named by the import paths. It
 Usage:
 
     go fmt [-n] [-x] [packages]
+
+.link https://golang.org/cmd/gofmt/ Command gofmt
 
 * go generate
 
