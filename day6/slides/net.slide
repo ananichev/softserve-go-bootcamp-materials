@@ -1,7 +1,8 @@
 Networking
 Week 2, day 2
 
-Serhii Herasymov
+*Serhii*Herasymov*
+(_updated_by_Oleksandr_Reuta_)
 SoftServe
 sgeras@softserveinc.com
 
@@ -217,7 +218,7 @@ Super-simple static webserver:
         return
     }
 
-* JSON searilisation
+* JSON serilization
 
 Go offers built-in support for JSON encoding and decoding, including to and from built-in and custom data types.
 
@@ -237,7 +238,7 @@ Go offers built-in support for JSON encoding and decoding, including to and from
         println(string(res2B))
     }
 
-* JSON searilisation
+* JSON serilization
 
 You can easily read a request to JSON:
 
@@ -255,10 +256,13 @@ You can easily read a request to JSON:
 
 * WebSockets
 
-Just use github.com/ *gorilla/websocket*
+Just use github.com/*gorilla/websocket* from [[http://www.gorillatoolkit.org/][Gorilla Toolkit]]
 
 Gorilla WebSocket is a Go implementation of the WebSocket protocol. This package provides a complete and tested implementation of the WebSocket protocol. The package API is stable.
 
+Some tutorials:
+.link https://dinosaurscode.xyz/go/2016/07/17/go-websockets-tutorial/ Go WebSockets Tutorial
+.link https://www.youtube.com/watch?v=CIh8qN7LO8M Using WebSockets with Go
 
 * net/rpc
 
@@ -411,8 +415,11 @@ API documentation with Swagger
 
 * Go in Amazon Lambda
 
-.image ./sparta.png
-A Go framework for AWS Lambda microservices - http://gosparta.io
 
+[[http://gosparta.io/][Sparta]] is a Go framework for AWS Lambda microservices
+.image ./sparta.png
+
+
+[[http://apex.run/][Apex]] lets you build, deploy, and manage AWS Lambda functions with ease
+(some examples could be found [[https://github.com/apex/apex][here]])
 .image ./apex.png
-Apex lets you build, deploy, and manage AWS Lambda functions with ease. - http://apex.run/
